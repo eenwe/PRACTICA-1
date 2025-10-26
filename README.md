@@ -1,88 +1,39 @@
-# PRACTICA-1
-usage: colab_kernel_launcher.py [-h] --tickers TICKERS --inicio INICIO --fin
-                                FIN [--guardar]
-colab_kernel_launcher.py: error: the following arguments are required: --tickers, --inicio, --fin
-ERROR:root:Internal Python error in the inspect module.
-Below is the traceback from this internal error.
+El objetivo de este proyecto es crear un programa que actúe como un conjunto de herramientas para la obtención y el análisis de información bursátil. Si bien una parte importante de esto puede resolverlo una IA, la importancia radica en sedimentar en tu mente las estructuras y buenas prácticas a la hora de crear código. Decisiones que pueden parecer engorrosas a pequeña escala son las que luego permiten a los proyectos crecer más allá de los límites a los que un solo individuo puede llegar. Valora la importancia de la estructura, de las abstracciones y de la estandarización.
 
-Traceback (most recent call last):
-  File "/usr/lib/python3.12/argparse.py", line 1943, in _parse_known_args2
-    namespace, args = self._parse_known_args(args, namespace, intermixed)
-                      ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/argparse.py", line 2230, in _parse_known_args
-    raise ArgumentError(None, _('the following arguments are required: %s') %
-argparse.ArgumentError: the following arguments are required: --tickers, --inicio, --fin
+Crea un proyecto en GitHub para esta práctica.
 
-During handling of the above exception, another exception occurred:
+Recuerda detallar en el fichero README aquello que consideres necesario.
 
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.12/dist-packages/IPython/core/interactiveshell.py", line 3553, in run_code
-    exec(code_obj, self.user_global_ns, self.user_ns)
-  File "/tmp/ipython-input-3070867861.py", line 53, in <cell line: 0>
-    main()
-  File "/tmp/ipython-input-3070867861.py", line 43, in main
-    args = parser.parse_args()
-           ^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/argparse.py", line 1904, in parse_args
-    args, argv = self.parse_known_args(args, namespace)
-                 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/argparse.py", line 1914, in parse_known_args
-    return self._parse_known_args2(args, namespace, intermixed=False)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/argparse.py", line 1945, in _parse_known_args2
-    self.error(str(err))
-  File "/usr/lib/python3.12/argparse.py", line 2650, in error
-    self.exit(2, _('%(prog)s: error: %(message)s\n') % args)
-  File "/usr/lib/python3.12/argparse.py", line 2637, in exit
-    _sys.exit(status)
-SystemExit: 2
+Crea una carpeta /src donde se encuentre el núcleo de tu trabajo.
 
-During handling of the above exception, another exception occurred:
+Añade aquello que consideres necesario para que el proyecto sea lo más “plug-n-play” posible.
 
-Traceback (most recent call last):
-  File "/usr/local/lib/python3.12/dist-packages/IPython/core/ultratb.py", line 1101, in get_records
-    return _fixed_getinnerframes(etb, number_of_lines_of_context, tb_offset)
-           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/IPython/core/ultratb.py", line 248, in wrapped
-    return f(*args, **kwargs)
-           ^^^^^^^^^^^^^^^^^^
-  File "/usr/local/lib/python3.12/dist-packages/IPython/core/ultratb.py", line 281, in _fixed_getinnerframes
-    records = fix_frame_records_filenames(inspect.getinnerframes(etb, context))
-                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/inspect.py", line 1769, in getinnerframes
-    traceback_info = getframeinfo(tb, context)
-                     ^^^^^^^^^^^^^^^^^^^^^^^^^
-  File "/usr/lib/python3.12/inspect.py", line 1701, in getframeinfo
-    lineno = frame.f_lineno
-             ^^^^^^^^^^^^^^
-AttributeError: 'tuple' object has no attribute 'f_lineno'
----------------------------------------------------------------------------
-ArgumentError                             Traceback (most recent call last)
-/usr/lib/python3.12/argparse.py in _parse_known_args2(self, args, namespace, intermixed)
-   1942             try:
--> 1943                 namespace, args = self._parse_known_args(args, namespace, intermixed)
-   1944             except ArgumentError as err:
+Crea un programa extractor cuya función sea obtener datos desde varias fuentes de datos online (APIs).
 
-15 frames
-ArgumentError: the following arguments are required: --tickers, --inicio, --fin
+Este programa puede contener múltiples opciones, pero es necesario que existan métodos para descargar información histórica de precios tanto de acciones como de índices.
 
-During handling of the above exception, another exception occurred:
+Independientemente de la fuente de información, el formato de salida de esta información debe ser estandarizado. Es decir, con independencia de la fuente original, nuestro programa debe darnos en salida objetos iguales. Por ejemplo: independientemente de la api utilizada, el formato de precio histórico debe ser compatible con el formato de salida que resulte de utilizar otra API diferente.
 
-SystemExit                                Traceback (most recent call last)
-    [... skipping hidden 1 frame]
+Añade opción de conseguir otra tipología de datos a tu gusto.
 
-SystemExit: 2
+Haz que el extractor pueda conseguir N series de datos al mismo tiempo dado un input que induzca a ello.
 
-During handling of the above exception, another exception occurred:
+Hagamos que los datos sean coherentes. Cada serie de datos debe ser un objeto. Crea DataClasses para las series de precios. Existiendo estos objetos, ¿qué es una cartera?
 
-TypeError                                 Traceback (most recent call last)
-    [... skipping hidden 1 frame]
+Añade métodos a las dataclasses de series de precios que incorporen información estadística relevante. Haz que los métodos para la información más básica (media y desviación típica) se apliquen automáticamente.
 
-/usr/local/lib/python3.12/dist-packages/IPython/core/ultratb.py in find_recursion(etype, value, records)
-    380     # first frame (from in to out) that looks different.
-    381     if not is_recursion_error(etype, value, records):
---> 382         return len(records), 0
-    383 
-    384     # Select filename, lineno, func_name to track frames with
+Dado un valor o una cartera, elabora un pequeño programa que genere una simulación de Monte Carlo para su evolución.
 
-TypeError: object of type 'NoneType' has no len()
+Intenta que esta simulación sea maleable por el usuario por parámetros.
+
+Haz que la simulación pueda ser tanto de la cartera en su conjunto como de los elementos que la componen.
+
+Convierte el proceso de Monte Carlo en un método para la DataClass de la cartera. Incluye otro método que muestre por pantalla visualmente el resultado.
+
+Incluye métodos para la “limpieza” y el preprocesado de los datos. ¿Debería el programa aceptarte cualquier tipo de input siempre que exista una serie temporal de precios?
+
+Dada una cartera, crea un método .report (con los parámetros que consideres oportunos) que genere texto formateado en markdown y pueda mostrar por pantalla aquel análisis que consideres relevante, así como advertencias y cualquier otro aspecto.
+
+Antiguamente, generar gráficos verdaderamente resultones era tedioso y no tenia gran aporte intelectual; la IA facilita enormemente todo esto. Intenta pensar en el tipo de visualizaciones más útiles para un usuario con su ayuda y guárdalas para que un método .plots_report() las muestre.
+
+Estás construyendo un programa que empieza a tener dependencias, jerarquías, clases dentro de clases… es importante mantener la perspectiva general de lo que estás construyendo. Muchas veces, de hecho, igual debería ser tu primer paso. Intenta plasmar esta estructura utilizando algún recurso para mostrar diagramas. Esta es sencilla y útil https://github.com/stan-smith/FossFLOW 
