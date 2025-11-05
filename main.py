@@ -8,7 +8,7 @@ API_KEY_AV = "26D89FF9C6KRYKWO"
 
 
 
-# DESCARGA DE DATOS
+##### DESCARGA DE DATOS #####
 
 
 def descargar_datos_yf(tickers, inicio, fin, guardar_csv=False):
@@ -18,11 +18,12 @@ def descargar_datos_yf(tickers, inicio, fin, guardar_csv=False):
     Esta función accede a Yahoo Finance y descarga datos dando valores de inicio y fin
     PARÁMETROS
     ----------
-        tickers:
-        inicio:
+        tickers
+        inicio
+        guardar_csv
     Return:
     -------
-        Devuelve un dataframe con los datos descargados en cas de que la descarga sea correcta
+        Devuelve un dataframe con los datos descargados en las de que la descarga sea correcta
     """
     try:
         datos = yf.download(tickers, start=inicio, end=fin, group_by='ticker', progress=False)
@@ -60,16 +61,15 @@ def descargar_datos_yf(tickers, inicio, fin, guardar_csv=False):
 
 
 # Esta función descarga los datos de AV
-
-"""
-Descarga datos históricos desde la API de Alpha Vantage
-
-Se obtiene la información ajustada diaria de cada ticker solicitado y se procesan los datos en formato pandas
-Para mantener coherencia con otras fuentes se renombran las columnas a un formato estándar
-Además, se filtran los datos según el rango de fechas indicado y se incluye manejo de errores y validaciones
-
-"""
 def descargar_datos_av(tickers, inicio, fin, guardar_csv=False, api_key=API_KEY_AV):
+    """
+    Descarga datos históricos desde la API de Alpha Vantage
+    
+    Se obtiene la información ajustada diaria de cada ticker solicitado y se procesan los datos en formato pandas
+    Para mantener coherencia con otras fuentes se renombran las columnas a un formato estándar
+    Además, se filtran los datos según el rango de fechas indicado y se incluye manejo de errores y validaciones
+    
+    """
     ts = TimeSeries(key=api_key, output_format='pandas')
     datos = {}
     tickers_validos = []
@@ -126,31 +126,30 @@ def descargar_datos_av(tickers, inicio, fin, guardar_csv=False, api_key=API_KEY_
 
 
 
-# CLASES
+##### CLASES #####
 
 
 class Report:
     """
     Descripción de la clase:
     ------------------------
-    ......
+    Dado un ticker, permite aplicar ciertos métodos para luego obetner datos y gráficas
     Atributos:
     -----------
-        ticker:
-        dataframe:
+        ticker
+        dataframe
     Métodos:
     --------
-    fechas:
-        
-    cierre() -> pd.Series: devuelve los precios de cierre ajustados o normales
-    retornos_diarios() -> pd.Series: calcula los retornos porcentuales diarios
-    media_retorno() -> float: calcula el retorno medio diario
-    desviacion_tipica() -> float: calcula la desviación estándar de los retornos diarios
-    retorno_acumulado() -> float: devuelve el rendimiento total en el periodo analizado
-    volatilidad_anualizada() -> float: estima la volatilidad anual asumiendo 252 días de mercado
-    retorno_anualizado() -> float: calcula el retorno anualizado a partir del retorno acumulado
-    max_drawdown() -> float: determina la máxima caída desde un pico histórico
-    ratio_sharpe(rf=0.0) -> float: calcula el ratio Sharpe ajustado por el tipo libre de riesgo
+    fechas() -> obtiene fechas   
+    cierre() -> devuelve los precios de cierre ajustados o normales
+    retornos_diarios() -> calcula los retornos porcentuales diarios
+    media_retorno() -> calcula el retorno medio diario
+    desviacion_tipica() -> calcula la desviación estándar de los retornos diarios
+    retorno_acumulado() -> devuelve el rendimiento total en el periodo analizado
+    volatilidad_anualizada() -> estima la volatilidad anual asumiendo 252 días de mercado
+    retorno_anualizado() -> calcula el retorno anualizado a partir del retorno acumulado
+    max_drawdown() -> determina la máxima caída desde un pico histórico
+    ratio_sharpe(rf=0.0) -> calcula el ratio Sharpe ajustado por el tipo libre de riesgo
     graficar_precios(): muestra la evolución del precio en el tiempo
     graficar_retornos(): muestra los retornos diarios en una serie temporal
     graficar_hist_retornos(): representa un histograma de la distribución de retornos diarios
@@ -262,36 +261,37 @@ class Datosprint(Report):
 
 
 
-# CLASE DE CARTERA
-"""
-Descripción de la clase:
+##### CLASE DE CARTERA #####
+
+
+class Cartera:
+    """
+    Descripción de la clase:
     ------------------------
     Clase que representa una cartera de inversión formada por varios activos y sus pesos asociados
 
     Atributos:
     -----------
-        activos: lista de objetos Report que representan los activos de la cartera
-        pesos: diccionario con los pesos de cada activo, donde la clave es el ticker
-        retorno_df: DataFrame con los retornos diarios de todos los activos
-        retorno_cartera: serie con los retornos diarios combinados según los pesos
+        activos
+        pesos
+        retorno_df
+        retorno_cartera
 
     Métodos:
     --------
-        _construir_retorno_df() -> pd.DataFrame: construye el DataFrame con los retornos diarios de cada activo
-        _retorno_cartera() -> pd.Series: calcula el retorno diario total de la cartera
-        retorno_esperado() -> float: devuelve el retorno medio diario de la cartera
-        volatilidad_estimada() -> float: calcula la desviación estándar del retorno diario de la cartera
-        retorno_anualizado() -> float: estima el retorno anualizado según el retorno medio diario
-        volatilidad_anualizada() -> float: estima la volatilidad anualizada de la cartera
-        sharpe_ratio(rf=0.0) -> float: calcula el ratio Sharpe ajustado por el tipo libre de riesgo
-        max_drawdown() -> float: determina la máxima pérdida desde un pico histórico de valor
+        _construir_retorno_df() -> construye el DataFrame con los retornos diarios de cada activo
+        _retorno_cartera() -> calcula el retorno diario total de la cartera
+        retorno_esperado() -> devuelve el retorno medio diario de la cartera
+        volatilidad_estimada() -> calcula la desviación estándar del retorno diario de la cartera
+        retorno_anualizado() -> estima el retorno anualizado según el retorno medio diario
+        volatilidad_anualizada() ->  estima la volatilidad anualizada de la cartera
+        sharpe_ratio(rf=0.0) ->  calcula el ratio Sharpe ajustado por el tipo libre de riesgo
+        max_drawdown() -> determina la máxima pérdida desde un pico histórico de valor
         resumen(): muestra en consola las métricas principales de la cartera
         graficar_pesos(): muestra un gráfico circular con la distribución de los pesos
         graficar_evolucion(): muestra la evolución temporal del valor total de la cartera
 
-"""
-
-class Cartera:
+    """
     def __init__(self, activos: list, pesos: dict):
         self.activos = activos
         self.pesos = pesos
@@ -380,7 +380,8 @@ class Cartera:
         plt.grid(True)
         plt.show()
 
-# MONTE CARLO
+
+##### MONTE CARLO #####
 
 
 """
@@ -486,21 +487,20 @@ class MonteCarloEmpirico(MonteCarloSimulador):
 
 
 
-# INPUTS 
+##### INPUTS #####
 
-
-"""
-Bloque principal de ejecución del programa
-
-Solicita al usuario los parámetros de entrada (tickers, fechas, fuente de datos y pesos) y valida su formato
-Descarga los precios históricos desde la fuente seleccionada (Yahoo Finance o Alpha Vantage)
-Crea objetos de tipo Datosprint para cada activo y genera una cartera con los pesos definidos por el usuario
-Permite visualizar métricas, gráficos y realizar simulaciones Monte Carlo con diferentes distribuciones
-Incluye validaciones de errores y bucles interactivos para asegurar la coherencia de los datos ingresados
-
-"""
 
 try:
+    """
+    Bloque principal de ejecución del programa
+    
+    Solicita al usuario los parámetros de entrada (tickers, fechas, fuente de datos y pesos) y valida su formato
+    Descarga los precios históricos desde la fuente seleccionada (Yahoo Finance o Alpha Vantage)
+    Crea objetos de tipo Datosprint para cada activo y genera una cartera con los pesos definidos por el usuario
+    Permite visualizar métricas, gráficos y realizar simulaciones Monte Carlo con diferentes distribuciones
+    Incluye validaciones de errores y bucles interactivos para asegurar la coherencia de los datos ingresados
+    
+    """
     while True:
         tickers = input("Tickers separados por coma (ej: AAPL,MSFT): ").split(",")
         tickers = [t.strip().upper() for t in tickers if t.strip()]
@@ -631,3 +631,5 @@ try:
 
 except Exception as e:
     print("Error en la ejecución:", e)
+
+
