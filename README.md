@@ -12,6 +12,10 @@ Se han establecido clases y jerarquias para el calculo de distintos parametros c
   Se establece otra clase con la posibilidad de realizar una simulacion empirica
 
 Por ultimo se ha establecido unos inputs para qeu el usuario solicite los datos que considere, asi como los graficos que le sean necesarios, ademas, esta incluida la posibilidad del reprocesado de datos en caso que la informacion introducida no sea valida 
-  
+
+
+ENLACE AL VIDEO EXPLICATORIO DE LA PRACTICA
+
+https://drive.google.com/file/d/1Nsy-6C-KLaGXqOaddJtjpF5vtV81WIe4/view?usp=sharing
 
   
