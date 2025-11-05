@@ -7,9 +7,9 @@ from alpha_vantage.timeseries import TimeSeries
 API_KEY_AV = "26D89FF9C6KRYKWO"
 
 
-# ============================
+
 # DESCARGA DE DATOS
-# ============================
+
 
 def descargar_datos_yf(tickers, inicio, fin, guardar_csv=False):
     """
@@ -202,7 +202,7 @@ class Report:
     def graficar_precios(self):
         plt.figure(figsize=(10, 5))
         plt.plot(self.data.index, self.cierre(), label=f"{self.ticker}")
-        plt.title(f"📈 Evolución del precio - {self.ticker}")
+        plt.title(f" Evolución del precio - {self.ticker}")
         plt.xlabel("Fecha")
         plt.ylabel("Precio")
         plt.legend()
@@ -212,7 +212,7 @@ class Report:
     def graficar_retornos(self):
         plt.figure(figsize=(10, 4))
         plt.plot(self._retornos, color='orange')
-        plt.title(f"📊 Retornos diarios - {self.ticker}")
+        plt.title(f" Retornos diarios - {self.ticker}")
         plt.xlabel("Fecha")
         plt.ylabel("Retorno diario (%)")
         plt.grid(True)
@@ -221,16 +221,37 @@ class Report:
     def graficar_hist_retornos(self):
         plt.figure(figsize=(8, 4))
         plt.hist(self._retornos * 100, bins=30, color='purple', alpha=0.7)
-        plt.title(f"📉 Distribución de retornos - {self.ticker}")
+        plt.title(f" Distribución de retornos - {self.ticker}")
         plt.xlabel("Retorno diario (%)")
         plt.ylabel("Frecuencia")
         plt.grid(True)
         plt.show()
 
+    def simular_montecarlo(self, n_paths=1000, n_dias=252):
+        mu = self.media_retorno() * 252
+        sigma = self.desviacion_tipica() * np.sqrt(252)
+        S0 = self.cierre().iloc[-1]
+        dt = 1 / 252
+        precios = np.zeros((n_dias, n_paths))
+        precios[0] = S0
+
+        for t in range(1, n_dias):
+            rand = np.random.normal(0, 1, n_paths)
+            precios[t] = precios[t - 1] * np.exp((mu - 0.5 * sigma ** 2) * dt + sigma * np.sqrt(dt) * rand)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(precios, alpha=0.1, color='blue')
+        plt.title(f"Simulación Monte Carlo Normal - {self.ticker}")
+        plt.xlabel("Días")
+        plt.ylabel("Precio simulado")
+        plt.grid(True)
+        plt.show()
+
+
 
 class Datosprint(Report):
     def resumen(self):
-        print(f"\n📈 Resumen para {self.ticker}")
+        print(f"\nResumen para {self.ticker}")
         print(f"Fechas: {self.fechas()[0].date()} → {self.fechas()[-1].date()}")
         print(f"Retorno acumulado: {self.retorno_acumulado() * 100:.2f}%")
         print(f"Retorno anualizado: {self.retorno_anualizado() * 100:.2f}%")
@@ -311,7 +332,7 @@ class Cartera:
         return drawdown.min()
 
     def resumen(self):
-        print("\n💼 Resumen de cartera:")
+        print("\n Resumen de cartera:")
         for a in self.activos:
             peso = self.pesos.get(a.ticker, 0)
             print(f" - {a.ticker}: peso {peso:.2f}")
@@ -326,20 +347,38 @@ class Cartera:
         valores = list(self.pesos.values())
         plt.figure(figsize=(6, 6))
         plt.pie(valores, labels=etiquetas, autopct='%1.1f%%', startangle=90)
-        plt.title("💼 Distribución de pesos de la cartera")
+        plt.title("Distribución de pesos de la cartera")
         plt.show()
 
     def graficar_evolucion(self):
         plt.figure(figsize=(10, 5))
         valor_cartera = (1 + self.retorno_cartera).cumprod()
         plt.plot(valor_cartera, color="black")
-        plt.title("📊 Evolución histórica del valor de la cartera")
+        plt.title("Evolución histórica del valor de la cartera")
         plt.xlabel("Fecha")
         plt.ylabel("Valor normalizado (inicio = 1)")
         plt.grid(True)
         plt.show()
 
+    def simular_montecarlo(self, n_paths=1000, n_dias=252):
+        mu = self.retorno_esperado() * 252
+        sigma = self.volatilidad_estimada() * np.sqrt(252)
+        S0 = 1
+        dt = 1 / 252
+        precios = np.zeros((n_dias, n_paths))
+        precios[0] = S0
 
+        for t in range(1, n_dias):
+            rand = np.random.normal(0, 1, n_paths)
+            precios[t] = precios[t - 1] * np.exp((mu - 0.5 * sigma ** 2) * dt + sigma * np.sqrt(dt) * rand)
+
+        plt.figure(figsize=(10, 6))
+        plt.plot(precios, alpha=0.1, color='red')
+        plt.title("Simulación Monte Carlo Normal - Cartera")
+        plt.xlabel("Días")
+        plt.ylabel("Valor simulado")
+        plt.grid(True)
+        plt.show()
 
 # MONTE CARLO
 
@@ -520,7 +559,7 @@ try:
         cartera = Cartera(activos, pesos)
         cartera.resumen()
 
-        ver_graficos = input("\n¿Deseas ver gráficos? (s/n): ").lower()
+        ver_graficos = input("\n ¿Deseas ver gráficos? (s/n): ").lower()
         if ver_graficos == "s":
             print("\nOpciones disponibles:")
             print("1 - Precio histórico")
@@ -548,7 +587,7 @@ try:
                 cartera.graficar_evolucion()
 
             if "6" in opciones:
-                print("\nSelecciona tipo de distribución para la simulación Monte Carlo:")
+                print("\n Selecciona tipo de distribución para la simulación Monte Carlo:")
                 print("1 - Normal (por defecto)")
                 print("2 - t-Student")
                 print("3 - Empírica (bootstrap histórico)")
@@ -564,7 +603,29 @@ try:
                     sim = MonteCarloSimulador(cartera, n_paths=1000, n_dias=252)
                 sim.simular()
                 sim.graficar()
-                print("✅ Simulación Monte Carlo completada.")
+                print("Simulación Monte Carlo completada.")
+        
+        ver_mc_directa = input("\n¿Deseas mostrar simulaciones Monte Carlo normales? (s/n): ").lower()
+        if ver_mc_directa == "s":
+            print("\n Opciones disponibles:")
+            print("1 - Simulación Monte Carlo individual por activo (clase Report)")
+            print("2 - Simulación Monte Carlo de la cartera completa")
+            print("3 - Ambas simulaciones")
+
+            opcion_mc = input("Selecciona una opción (1/2/3): ").strip()
+
+            if opcion_mc in ["1", "3"]:
+                print("\nSimulaciones Monte Carlo (activos individuales):")
+                for activo in activos:
+                    print(f" - {activo.ticker}")
+                    activo.simular_montecarlo()
+
+            if opcion_mc in ["2", "3"]:
+                print("\n Simulación Monte Carlo Normal para la cartera completa...")
+                cartera.simular_montecarlo()
+
+            print("Simulaciones Monte Carlo completadas.")
+        
 
         break  
 
